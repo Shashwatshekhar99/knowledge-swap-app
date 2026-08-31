@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { CalendarDays, Clock, Loader2 } from "lucide-react";
+import { CalendarDays, Clock, Loader2, MessageCircle } from "lucide-react";
 
 import { StatusBadge } from "@/components/StatusBadge";
 import { UserAvatar } from "@/components/UserAvatar";
@@ -13,6 +13,7 @@ export function RequestCard({
   hasReviewed,
   onUpdateStatus,
   onReview,
+  onChat,
 }: {
   request: RequestWithDetails;
   mode: "incoming" | "sent";
@@ -20,6 +21,7 @@ export function RequestCard({
   hasReviewed?: boolean | undefined;
   onUpdateStatus: (status: string) => void;
   onReview: () => void;
+  onChat?: (() => void) | undefined;
 }) {
   const person = mode === "incoming" ? request.requester : request.provider;
 
@@ -109,6 +111,18 @@ export function RequestCard({
             onClick={() => onUpdateStatus("cancelled")}
           >
             Cancel Request
+          </Button>
+        ) : null}
+
+        {onChat && (request.status === "accepted" || request.status === "completed") ? (
+          <Button
+            size="sm"
+            variant="outline"
+            className="rounded-xl"
+            onClick={onChat}
+          >
+            <MessageCircle className="size-4" aria-hidden="true" />
+            Chat
           </Button>
         ) : null}
 

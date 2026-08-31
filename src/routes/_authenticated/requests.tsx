@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { EmptyState } from "@/components/EmptyState";
 import { RowSkeleton } from "@/components/LoadingSkeleton";
 import { RequestCard } from "@/components/RequestCard";
+import { SessionChatDialog } from "@/components/SessionChatDialog";
 import { ReviewModal } from "@/components/ReviewModal";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -36,6 +37,7 @@ function RequestsPage() {
   const userId = user!.id;
   const queryClient = useQueryClient();
   const [reviewing, setReviewing] = useState<RequestWithDetails | null>(null);
+  const [chatting, setChatting] = useState<RequestWithDetails | null>(null);
   const [pendingId, setPendingId] = useState<string | null>(null);
 
   const requests = useQuery({
@@ -124,6 +126,7 @@ function RequestsPage() {
             hasReviewed={reviewedRequestIds.has(request.id)}
             onUpdateStatus={(status) => statusMutation.mutate({ id: request.id, status })}
             onReview={() => setReviewing(request)}
+            onChat={() => setChatting(request)}
           />
         ))}
       </div>
@@ -153,6 +156,12 @@ function RequestsPage() {
           {renderList(sent, "sent")}
         </TabsContent>
       </Tabs>
+
+      <SessionChatDialog
+        request={chatting}
+        currentUserId={userId}
+        onOpenChange={(open) => !open && setChatting(null)}
+      />
 
       <ReviewModal
         request={reviewing}
