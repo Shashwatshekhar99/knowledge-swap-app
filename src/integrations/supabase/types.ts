@@ -14,6 +14,47 @@ export type Database = {
   }
   public: {
     Tables: {
+      peer_ratings: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          rater_id: string
+          rating: number
+          target_id: string
+          target_type: string
+          updated_at: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rater_id: string
+          rating: number
+          target_id: string
+          target_type: string
+          updated_at?: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rater_id?: string
+          rating?: number
+          target_id?: string
+          target_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "peer_ratings_rater_id_fkey"
+            columns: ["rater_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null

@@ -14,6 +14,7 @@ import { toast } from "sonner";
 
 import { ConfirmDeleteDialog } from "@/components/ConfirmDeleteDialog";
 import { EmptyState } from "@/components/EmptyState";
+import { PeerRatingPanel } from "@/components/PeerRatingPanel";
 import { RatingStars } from "@/components/RatingStars";
 import { RequestSessionDialog } from "@/components/RequestSessionDialog";
 import { UserAvatar } from "@/components/UserAvatar";
@@ -149,6 +150,15 @@ function SkillDetailPage() {
               </p>
             </section>
           ) : null}
+
+          <PeerRatingPanel
+            targetType="offering"
+            targetId={offering.id}
+            currentUserId={userId}
+            isOwn={isOwn}
+            title="Peer ratings for this skill"
+            description="Students rate this offering so others know what to expect before booking."
+          />
         </div>
 
         <aside className="space-y-6">
