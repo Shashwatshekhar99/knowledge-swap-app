@@ -1,12 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CalendarClock, CalendarDays, Clock, Inbox, MessagesSquare, Plus, Sparkles, Star, Video, MapPin, CheckCircle2 } from "lucide-react";
+import { CalendarClock, CalendarDays, CalendarRange, Clock, Inbox, MessagesSquare, Plus, Sparkles, Star, Video, MapPin, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 
+import { AvailabilityPlanner } from "@/components/AvailabilityPlanner";
 import { ChatHistory } from "@/components/ChatHistory";
 import { EmptyState } from "@/components/EmptyState";
 import { RequestSessionDialog } from "@/components/RequestSessionDialog";
 import { SessionCalendar } from "@/components/SessionCalendar";
+import { SlotBooking } from "@/components/SlotBooking";
 import { SessionChatDialog } from "@/components/SessionChatDialog";
 import { UpcomingSessions } from "@/components/UpcomingSessions";
 import { SkillCard } from "@/components/SkillCard";
