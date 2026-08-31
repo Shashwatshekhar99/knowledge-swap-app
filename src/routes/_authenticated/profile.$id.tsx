@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { EmptyState } from "@/components/EmptyState";
 import { RowSkeleton, SkillGridSkeleton } from "@/components/LoadingSkeleton";
+import { PeerRatingPanel } from "@/components/PeerRatingPanel";
 import { RatingStars } from "@/components/RatingStars";
 import { RequestSessionDialog } from "@/components/RequestSessionDialog";
 import { SkillCard } from "@/components/SkillCard";
@@ -136,6 +137,17 @@ function PublicProfilePage() {
           )}
         </div>
       </section>
+
+      <div className="mt-10">
+        <PeerRatingPanel
+          targetType="profile"
+          targetId={id}
+          currentUserId={user!.id}
+          isOwn={isSelf}
+          title="Peer ratings"
+          description="How other students rate this peer — before or after sharing a session."
+        />
+      </div>
 
       <section className="mt-10" aria-labelledby="their-reviews-heading">
         <h2 id="their-reviews-heading" className="text-xl font-bold tracking-tight">
