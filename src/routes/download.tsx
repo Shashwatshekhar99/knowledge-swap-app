@@ -1,11 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
-import { Apple, ArrowLeft, Download, Laptop, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Apple, ArrowLeft, Check, Copy, Download, Laptop, Loader2, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+
+
 
 
 export const Route = createFileRoute("/download")({
@@ -29,6 +32,8 @@ export const Route = createFileRoute("/download")({
   component: DownloadPage,
 });
 
+const MAC_UNBLOCK = 'xattr -dr com.apple.quarantine /Applications/SkillSwap.app';
+
 const PLATFORMS = [
   {
     id: "mac" as const,
@@ -36,7 +41,7 @@ const PLATFORMS = [
     label: "Download for macOS",
     icon: Apple,
     size: "379 MB",
-    note: "Unzip and drag SkillSwap.app into Applications. On first launch, right-click the app and choose Open.",
+    note: "Double-click the downloaded file to unzip, drag SkillSwap into Applications, then run the one-line unblock command below before your first launch.",
   },
   {
     id: "windows" as const,
@@ -49,6 +54,23 @@ const PLATFORMS = [
 ];
 
 function DownloadPage() {
+  const [isMac, setIsMac] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    setIsMac(/mac|iphone|ipad/i.test(navigator.userAgent));
+  }, []);
+
+  const copyCommand = async () => {
+    try {
+      await navigator.clipboard.writeText(MAC_UNBLOCK);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error("Copy failed — select the command and copy it manually.");
+    }
+  };
+
   const mutation = useMutation({
     mutationFn: async (file: string) => {
       const { data, error } = await supabase.storage
@@ -58,11 +80,17 @@ function DownloadPage() {
       return data.signedUrl;
     },
     onSuccess: (url) => {
-      window.location.href = url;
-
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      toast.success("Download started — check your Downloads folder.");
     },
     onError: () => toast.error("Could not start the download. Please try again."),
   });
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -115,6 +143,43 @@ function DownloadPage() {
             );
           })}
         </div>
+
+        <section className="card-surface mx-auto mt-10 max-w-3xl p-6">
+          <div className="flex items-start gap-3">
+            <ShieldAlert className="mt-0.5 size-5 text-accent" aria-hidden="true" />
+            <div className="flex-1">
+              <h2 className="text-lg font-bold">
+                macOS says “damaged” or “malware”? Here’s the 20-second fix
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                The app isn’t malware — it just isn’t signed with a paid Apple Developer
+                certificate yet, so macOS quarantines anything downloaded from the web.
+                {isMac ? " Since you’re on a Mac, follow these steps:" : ""}
+              </p>
+              <ol className="mt-4 space-y-2 text-sm text-muted-foreground">
+                <li>1. Download the macOS ZIP above and double-click it to unzip.</li>
+                <li>2. Drag <span className="font-semibold text-foreground">SkillSwap</span> into your Applications folder.</li>
+                <li>3. Open Terminal and run this command:</li>
+              </ol>
+              <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
+                <code className="flex-1 overflow-x-auto rounded-xl bg-muted px-3 py-2 text-xs text-foreground">
+                  {MAC_UNBLOCK}
+                </code>
+                <Button variant="outline" size="sm" className="rounded-xl" onClick={copyCommand}>
+                  {copied ? <Check className="size-4" aria-hidden="true" /> : <Copy className="size-4" aria-hidden="true" />}
+                  {copied ? "Copied" : "Copy"}
+                </Button>
+              </div>
+              <p className="mt-3 text-sm text-muted-foreground">
+                4. Launch SkillSwap normally. If you skip step 3, right-click the app and choose
+                <span className="font-semibold text-foreground"> Open</span>, then confirm
+                <span className="font-semibold text-foreground"> Open</span> in the dialog.
+              </p>
+            </div>
+          </div>
+        </section>
+
+
 
         <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-muted-foreground">
           Prefer the web? You can keep using SkillSwap right in your browser —{" "}
