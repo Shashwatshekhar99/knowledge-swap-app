@@ -32,8 +32,6 @@ export const Route = createFileRoute("/download")({
   component: DownloadPage,
 });
 
-const MAC_UNBLOCK = 'xattr -dr com.apple.quarantine /Applications/SkillSwap.app';
-
 const PLATFORMS = [
   {
     id: "mac" as const,
@@ -41,7 +39,7 @@ const PLATFORMS = [
     label: "Download for macOS",
     icon: Apple,
     size: "379 MB",
-    note: "Double-click the downloaded file to unzip, drag SkillSwap into Applications, then run the one-line unblock command below before your first launch.",
+    note: "Double-click the downloaded file, then drag SkillSwap into your Applications folder.",
   },
   {
     id: "windows" as const,
@@ -49,28 +47,11 @@ const PLATFORMS = [
     label: "Download for Windows",
     icon: Laptop,
     size: "152 MB",
-    note: "Unzip and run SkillSwap.exe. If SmartScreen appears, choose More info → Run anyway.",
+    note: "Unzip and run SkillSwap.exe.",
   },
 ];
 
 function DownloadPage() {
-  const [isMac, setIsMac] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    setIsMac(/mac|iphone|ipad/i.test(navigator.userAgent));
-  }, []);
-
-  const copyCommand = async () => {
-    try {
-      await navigator.clipboard.writeText(MAC_UNBLOCK);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      toast.error("Copy failed — select the command and copy it manually.");
-    }
-  };
-
   const mutation = useMutation({
     mutationFn: async (file: string) => {
       const { data, error } = await supabase.storage
