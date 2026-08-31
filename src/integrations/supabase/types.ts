@@ -14,7 +14,211 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          college: string | null
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          college?: string | null
+          created_at?: string
+          email?: string | null
+          full_name: string
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          college?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          rating: number
+          request_id: string
+          reviewee_id: string
+          reviewer_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating: number
+          request_id: string
+          reviewee_id: string
+          reviewer_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating?: number
+          request_id?: string
+          reviewee_id?: string
+          reviewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "session_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_reviewee_id_fkey"
+            columns: ["reviewee_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_reviewer_id_fkey"
+            columns: ["reviewer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      session_requests: {
+        Row: {
+          created_at: string
+          id: string
+          message: string | null
+          offering_id: string
+          preferred_date: string | null
+          preferred_time: string | null
+          provider_id: string
+          requester_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          offering_id: string
+          preferred_date?: string | null
+          preferred_time?: string | null
+          provider_id: string
+          requester_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string | null
+          offering_id?: string
+          preferred_date?: string | null
+          preferred_time?: string | null
+          provider_id?: string
+          requester_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_requests_offering_id_fkey"
+            columns: ["offering_id"]
+            isOneToOne: false
+            referencedRelation: "skill_offerings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_requests_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_requests_requester_id_fkey"
+            columns: ["requester_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      skill_offerings: {
+        Row: {
+          availability: string | null
+          category: string
+          created_at: string
+          description: string
+          experience: string | null
+          format: string
+          id: string
+          is_active: boolean
+          price: number
+          provider_id: string
+          session_duration: number
+          title: string
+          updated_at: string
+          what_youll_learn: string | null
+        }
+        Insert: {
+          availability?: string | null
+          category: string
+          created_at?: string
+          description: string
+          experience?: string | null
+          format?: string
+          id?: string
+          is_active?: boolean
+          price?: number
+          provider_id: string
+          session_duration?: number
+          title: string
+          updated_at?: string
+          what_youll_learn?: string | null
+        }
+        Update: {
+          availability?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          experience?: string | null
+          format?: string
+          id?: string
+          is_active?: boolean
+          price?: number
+          provider_id?: string
+          session_duration?: number
+          title?: string
+          updated_at?: string
+          what_youll_learn?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "skill_offerings_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
