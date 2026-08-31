@@ -109,7 +109,7 @@ export async function fetchProviderStats(): Promise<Record<string, ProviderStats
     entry.reviewCount += 1;
   }
   for (const key of Object.keys(map)) {
-    const entry = map[key];
+    const entry = map[key]!;
     entry.rating = entry.reviewCount ? entry.rating / entry.reviewCount : 0;
   }
   for (const row of requests ?? []) {

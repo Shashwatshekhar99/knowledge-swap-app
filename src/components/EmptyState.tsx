@@ -9,8 +9,8 @@ export function EmptyState({
 }: {
   icon: LucideIcon;
   title: string;
-  description?: string;
-  action?: ReactNode;
+  description?: string | undefined;
+  action?: ReactNode | undefined;
 }) {
   return (
     <div className="card-surface flex flex-col items-center justify-center px-6 py-14 text-center">

@@ -7,9 +7,9 @@ export function UserAvatar({
   url,
   className,
 }: {
-  name?: string | null;
-  url?: string | null;
-  className?: string;
+  name?: string | null | undefined;
+  url?: string | null | undefined;
+  className?: string | undefined;
 }) {
   return (
     <Avatar className={cn("size-10 border border-border", className)}>

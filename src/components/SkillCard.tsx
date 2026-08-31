@@ -14,9 +14,9 @@ export function SkillCard({
   onRequest,
 }: {
   offering: OfferingWithProvider;
-  stats?: ProviderStats;
-  isOwn?: boolean;
-  onRequest?: (offering: OfferingWithProvider) => void;
+  stats?: ProviderStats | undefined;
+  isOwn?: boolean | undefined;
+  onRequest?: ((offering: OfferingWithProvider) => void) | undefined;
 }) {
   const provider = offering.provider;
   const FormatIcon = offering.format === "In Person" ? MapPin : Video;
