@@ -154,12 +154,13 @@ function LoginPage() {
           </div>
 
           <div className="mt-4 rounded-2xl border border-dashed border-border bg-card p-4 text-center text-xs text-muted-foreground">
-            <p className="font-semibold text-foreground">New here?</p>
+            <p className="font-semibold text-foreground">Demo account</p>
             <p className="mt-1">
-              Sign up and confirm your email — the platform is already filled with real student
-              skills to explore.
+              demo@skillswap.app · SkillSwapDemo!2026
             </p>
+            <p className="mt-1">Ready to explore, with live skills and pending requests.</p>
           </div>
+
 
         </div>
       </main>
