@@ -132,6 +132,7 @@ function Landing() {
         <section className="container-page py-16 sm:py-24">
           <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
             <div>
+              <LogoMark className="mb-5 size-16 drop-shadow-sm sm:size-20" />
               <Badge
                 variant="secondary"
                 className="rounded-full border border-border px-3 py-1 text-xs font-semibold"
