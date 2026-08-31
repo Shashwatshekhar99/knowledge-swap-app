@@ -9,7 +9,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { Logo } from "@/components/Logo";
+import { Logo, LogoMark } from "@/components/Logo";
 import { RatingStars } from "@/components/RatingStars";
 import { UserAvatar } from "@/components/UserAvatar";
 import { Badge } from "@/components/ui/badge";
