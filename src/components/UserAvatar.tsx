@@ -16,7 +16,7 @@ export function UserAvatar({
     <Avatar className={cn("size-10 border border-border", className)}>
       {url ? <AvatarImage src={url} alt={name ?? "Student avatar"} /> : null}
       <AvatarFallback className="bg-accent-soft text-sm font-semibold text-foreground">
-        {initialsOf(name)}
+        {name ? initialsOf(name) : <LogoMark className="size-1/2" />}
       </AvatarFallback>
     </Avatar>
   );
