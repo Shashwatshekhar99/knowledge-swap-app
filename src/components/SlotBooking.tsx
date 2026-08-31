@@ -101,7 +101,7 @@ export function SlotBooking({
               className="card-surface flex flex-wrap items-center justify-between gap-3 p-4"
             >
               <div className="flex items-center gap-3">
-                <UserAvatar profile={slot.provider} className="size-10" />
+                <UserAvatar name={slot.provider?.full_name} url={slot.provider?.avatar_url} className="size-10" />
                 <div>
                   <p className="text-sm font-semibold">{slot.provider?.full_name ?? "A peer"}</p>
                   <p className="text-xs text-muted-foreground">
