@@ -1,10 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Clock, Inbox, Plus, Sparkles, Star, Video, MapPin, CheckCircle2 } from "lucide-react";
+import { CalendarClock, CalendarDays, Clock, Inbox, MessagesSquare, Plus, Sparkles, Star, Video, MapPin, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 
+import { ChatHistory } from "@/components/ChatHistory";
 import { EmptyState } from "@/components/EmptyState";
 import { RequestSessionDialog } from "@/components/RequestSessionDialog";
+import { SessionCalendar } from "@/components/SessionCalendar";
+import { SessionChatDialog } from "@/components/SessionChatDialog";
+import { UpcomingSessions } from "@/components/UpcomingSessions";
 import { SkillCard } from "@/components/SkillCard";
 import { StatCard } from "@/components/StatCard";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -15,11 +19,14 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
 import {
   fetchActiveOfferings,
+  fetchMessagesForRequests,
   fetchMyOfferings,
   fetchMyRequests,
   fetchProviderStats,
   firstNameOf,
+  upcomingSessions,
   type OfferingWithProvider,
+  type RequestWithDetails,
 } from "@/lib/skillswap";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -38,6 +45,7 @@ function DashboardPage() {
   const { user, profile } = useAuth();
   const userId = user!.id;
   const [requesting, setRequesting] = useState<OfferingWithProvider | null>(null);
+  const [chatRequest, setChatRequest] = useState<RequestWithDetails | null>(null);
 
   const myOfferings = useQuery({
     queryKey: ["my-offerings", userId],
@@ -48,6 +56,14 @@ function DashboardPage() {
     queryFn: () => fetchMyRequests(userId),
   });
   const offerings = useQuery({ queryKey: ["offerings"], queryFn: fetchActiveOfferings });
+  const chatRequestIds = (requests.data ?? [])
+    .filter((request) => request.status === "accepted" || request.status === "completed")
+    .map((request) => request.id);
+  const messages = useQuery({
+    queryKey: ["dashboard-messages", userId, chatRequestIds.join(",")],
+    enabled: chatRequestIds.length > 0,
+    queryFn: () => fetchMessagesForRequests(chatRequestIds),
+  });
   const stats = useQuery({ queryKey: ["provider-stats"], queryFn: fetchProviderStats });
 
   const activeSkills = (myOfferings.data ?? []).filter((o) => o.is_active);
@@ -57,6 +73,7 @@ function DashboardPage() {
 
   const recommended = (offerings.data ?? []).filter((o) => o.provider_id !== userId).slice(0, 6);
   const recentRequests = (requests.data ?? []).slice(0, 5);
+  const upcoming = upcomingSessions(requests.data ?? []);
 
   return (
     <main className="container-page py-8 sm:py-10">
@@ -80,7 +97,12 @@ function DashboardPage() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <StatCard icon={Sparkles} label="Skills Offered" value={activeSkills.length} hint="Active offerings" />
-            <StatCard icon={Inbox} label="Pending Requests" value={pendingCount} hint="Incoming and sent" />
+            <StatCard
+              icon={CalendarClock}
+              label="Upcoming Sessions"
+              value={upcoming.length}
+              hint={pendingCount ? `${pendingCount} pending request(s)` : "Scheduled and accepted"}
+            />
             <StatCard icon={CheckCircle2} label="Sessions Completed" value={completedCount} />
             <StatCard
               icon={Star}
@@ -93,6 +115,67 @@ function DashboardPage() {
       </section>
 
       <div className="mt-10 grid gap-8 lg:grid-cols-[1.35fr_1fr]">
+        <section aria-labelledby="upcoming-sessions-heading">
+          <div className="flex items-center justify-between">
+            <h2 id="upcoming-sessions-heading" className="inline-flex items-center gap-2 text-xl font-bold tracking-tight">
+              <CalendarClock className="size-5 text-accent" aria-hidden="true" /> Upcoming Sessions
+            </h2>
+            <Link to="/requests" className="text-sm font-semibold text-accent hover:underline">
+              Manage requests
+            </Link>
+          </div>
+          <div className="mt-4">
+            {requests.isLoading ? (
+              <RowSkeleton count={2} />
+            ) : (
+              <UpcomingSessions
+                requests={requests.data ?? []}
+                currentUserId={userId}
+                onOpenChat={setChatRequest}
+              />
+            )}
+          </div>
+        </section>
+
+        <section aria-labelledby="chat-history-heading">
+          <div className="flex items-center justify-between">
+            <h2 id="chat-history-heading" className="inline-flex items-center gap-2 text-xl font-bold tracking-tight">
+              <MessagesSquare className="size-5 text-accent" aria-hidden="true" /> Chat History
+            </h2>
+          </div>
+          <div className="mt-4">
+            <ChatHistory
+              requests={requests.data ?? []}
+              messages={messages.data ?? []}
+              loading={requests.isLoading || messages.isLoading}
+              currentUserId={userId}
+              onOpenChat={setChatRequest}
+            />
+          </div>
+        </section>
+      </div>
+
+      <section className="mt-12" aria-labelledby="calendar-heading">
+        <h2 id="calendar-heading" className="inline-flex items-center gap-2 text-xl font-bold tracking-tight">
+          <CalendarDays className="size-5 text-accent" aria-hidden="true" /> Session Calendar
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Dates with a scheduled peer session are highlighted.
+        </p>
+        <div className="mt-4">
+          {requests.isLoading ? (
+            <RowSkeleton count={3} />
+          ) : (
+            <SessionCalendar
+              requests={requests.data ?? []}
+              currentUserId={userId}
+              onOpenChat={setChatRequest}
+            />
+          )}
+        </div>
+      </section>
+
+      <div className="mt-12 grid gap-8 lg:grid-cols-[1.35fr_1fr]">
         <section aria-labelledby="active-skills-heading">
           <div className="flex items-center justify-between">
             <h2 id="active-skills-heading" className="text-xl font-bold tracking-tight">
@@ -231,6 +314,11 @@ function DashboardPage() {
         </div>
       </section>
 
+      <SessionChatDialog
+        request={chatRequest}
+        currentUserId={userId}
+        onOpenChange={(open) => !open && setChatRequest(null)}
+      />
       <RequestSessionDialog
         offering={requesting}
         currentUserId={userId}
