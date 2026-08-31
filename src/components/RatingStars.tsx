@@ -10,10 +10,10 @@ export function RatingStars({
   className,
 }: {
   value: number;
-  count?: number;
-  size?: "sm" | "md";
-  showEmpty?: boolean;
-  className?: string;
+  count?: number | undefined;
+  size?: "sm" | "md" | undefined;
+  showEmpty?: boolean | undefined;
+  className?: string | undefined;
 }) {
   const rounded = Math.round(value * 10) / 10;
   const iconSize = size === "md" ? "size-4.5" : "size-3.5";

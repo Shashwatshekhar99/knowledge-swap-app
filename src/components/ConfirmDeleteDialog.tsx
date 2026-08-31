@@ -20,9 +20,9 @@ export function ConfirmDeleteDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
-  loading?: boolean;
-  title?: string;
-  description?: string;
+  loading?: boolean | undefined;
+  title?: string | undefined;
+  description?: string | undefined;
 }) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>

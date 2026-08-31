@@ -9,7 +9,7 @@ export function StatCard({
   icon: LucideIcon;
   label: string;
   value: string | number;
-  hint?: string;
+  hint?: string | undefined;
 }) {
   return (
     <div className="card-surface p-5 transition-shadow hover:shadow-[var(--shadow-lift)]">

@@ -14,7 +14,7 @@ export function StatusBadge({ status, className }: { status: string; className?:
     <span
       className={cn(
         "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset",
-        STYLES[status] ?? STYLES.cancelled,
+        STYLES[status] ?? STYLES["cancelled"],
         className,
       )}
     >

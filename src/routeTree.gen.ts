@@ -17,7 +17,11 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AuthenticatedCreateSkillRouteImport } from './routes/_authenticated/create-skill'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedExploreRouteImport } from './routes/_authenticated/explore'
+import { Route as AuthenticatedMySkillsRouteImport } from './routes/_authenticated/my-skills'
+import { Route as AuthenticatedRequestsRouteImport } from './routes/_authenticated/requests'
 import { Route as AuthenticatedEditSkillIdRouteImport } from './routes/_authenticated/edit-skill.$id'
+import { Route as AuthenticatedProfileIndexRouteImport } from './routes/_authenticated/profile.index'
+import { Route as AuthenticatedProfileIdRouteImport } from './routes/_authenticated/profile.$id'
 import { Route as AuthenticatedSkillsIdRouteImport } from './routes/_authenticated/skills.$id'
 
 const IndexRoute = IndexRouteImport.update({
@@ -60,12 +64,33 @@ const AuthenticatedExploreRoute = AuthenticatedExploreRouteImport.update({
   path: '/explore',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMySkillsRoute = AuthenticatedMySkillsRouteImport.update({
+  id: '/my-skills',
+  path: '/my-skills',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedRequestsRoute = AuthenticatedRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedEditSkillIdRoute =
   AuthenticatedEditSkillIdRouteImport.update({
     id: '/edit-skill/$id',
     path: '/edit-skill/$id',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedProfileIndexRoute =
+  AuthenticatedProfileIndexRouteImport.update({
+    id: '/profile/',
+    path: '/profile/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedProfileIdRoute = AuthenticatedProfileIdRouteImport.update({
+  id: '/profile/$id',
+  path: '/profile/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSkillsIdRoute = AuthenticatedSkillsIdRouteImport.update({
   id: '/skills/$id',
   path: '/skills/$id',
@@ -80,8 +105,12 @@ export interface FileRoutesByFullPath {
   '/create-skill': typeof AuthenticatedCreateSkillRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/explore': typeof AuthenticatedExploreRoute
+  '/my-skills': typeof AuthenticatedMySkillsRoute
+  '/requests': typeof AuthenticatedRequestsRoute
   '/edit-skill/$id': typeof AuthenticatedEditSkillIdRoute
+  '/profile/$id': typeof AuthenticatedProfileIdRoute
   '/skills/$id': typeof AuthenticatedSkillsIdRoute
+  '/profile/': typeof AuthenticatedProfileIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -91,8 +120,12 @@ export interface FileRoutesByTo {
   '/create-skill': typeof AuthenticatedCreateSkillRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/explore': typeof AuthenticatedExploreRoute
+  '/my-skills': typeof AuthenticatedMySkillsRoute
+  '/requests': typeof AuthenticatedRequestsRoute
   '/edit-skill/$id': typeof AuthenticatedEditSkillIdRoute
+  '/profile/$id': typeof AuthenticatedProfileIdRoute
   '/skills/$id': typeof AuthenticatedSkillsIdRoute
+  '/profile': typeof AuthenticatedProfileIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -104,8 +137,12 @@ export interface FileRoutesById {
   '/_authenticated/create-skill': typeof AuthenticatedCreateSkillRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/explore': typeof AuthenticatedExploreRoute
+  '/_authenticated/my-skills': typeof AuthenticatedMySkillsRoute
+  '/_authenticated/requests': typeof AuthenticatedRequestsRoute
   '/_authenticated/edit-skill/$id': typeof AuthenticatedEditSkillIdRoute
+  '/_authenticated/profile/$id': typeof AuthenticatedProfileIdRoute
   '/_authenticated/skills/$id': typeof AuthenticatedSkillsIdRoute
+  '/_authenticated/profile/': typeof AuthenticatedProfileIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -117,8 +154,12 @@ export interface FileRouteTypes {
     | '/create-skill'
     | '/dashboard'
     | '/explore'
+    | '/my-skills'
+    | '/requests'
     | '/edit-skill/$id'
+    | '/profile/$id'
     | '/skills/$id'
+    | '/profile/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -128,8 +169,12 @@ export interface FileRouteTypes {
     | '/create-skill'
     | '/dashboard'
     | '/explore'
+    | '/my-skills'
+    | '/requests'
     | '/edit-skill/$id'
+    | '/profile/$id'
     | '/skills/$id'
+    | '/profile'
   id:
     | '__root__'
     | '/'
@@ -140,8 +185,12 @@ export interface FileRouteTypes {
     | '/_authenticated/create-skill'
     | '/_authenticated/dashboard'
     | '/_authenticated/explore'
+    | '/_authenticated/my-skills'
+    | '/_authenticated/requests'
     | '/_authenticated/edit-skill/$id'
+    | '/_authenticated/profile/$id'
     | '/_authenticated/skills/$id'
+    | '/_authenticated/profile/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -210,11 +259,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedExploreRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/my-skills': {
+      id: '/_authenticated/my-skills'
+      path: '/my-skills'
+      fullPath: '/my-skills'
+      preLoaderRoute: typeof AuthenticatedMySkillsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/requests': {
+      id: '/_authenticated/requests'
+      path: '/requests'
+      fullPath: '/requests'
+      preLoaderRoute: typeof AuthenticatedRequestsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/edit-skill/$id': {
       id: '/_authenticated/edit-skill/$id'
       path: '/edit-skill/$id'
       fullPath: '/edit-skill/$id'
       preLoaderRoute: typeof AuthenticatedEditSkillIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile/': {
+      id: '/_authenticated/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof AuthenticatedProfileIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile/$id': {
+      id: '/_authenticated/profile/$id'
+      path: '/profile/$id'
+      fullPath: '/profile/$id'
+      preLoaderRoute: typeof AuthenticatedProfileIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/skills/$id': {
@@ -231,16 +308,24 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCreateSkillRoute: typeof AuthenticatedCreateSkillRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedExploreRoute: typeof AuthenticatedExploreRoute
+  AuthenticatedMySkillsRoute: typeof AuthenticatedMySkillsRoute
+  AuthenticatedRequestsRoute: typeof AuthenticatedRequestsRoute
   AuthenticatedEditSkillIdRoute: typeof AuthenticatedEditSkillIdRoute
+  AuthenticatedProfileIdRoute: typeof AuthenticatedProfileIdRoute
   AuthenticatedSkillsIdRoute: typeof AuthenticatedSkillsIdRoute
+  AuthenticatedProfileIndexRoute: typeof AuthenticatedProfileIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCreateSkillRoute: AuthenticatedCreateSkillRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedExploreRoute: AuthenticatedExploreRoute,
+  AuthenticatedMySkillsRoute: AuthenticatedMySkillsRoute,
+  AuthenticatedRequestsRoute: AuthenticatedRequestsRoute,
   AuthenticatedEditSkillIdRoute: AuthenticatedEditSkillIdRoute,
+  AuthenticatedProfileIdRoute: AuthenticatedProfileIdRoute,
   AuthenticatedSkillsIdRoute: AuthenticatedSkillsIdRoute,
+  AuthenticatedProfileIndexRoute: AuthenticatedProfileIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

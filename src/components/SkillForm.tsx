@@ -51,7 +51,7 @@ export function SkillForm({
   submitLabel: string;
   pending: boolean;
   onSubmit: (values: SkillFormValues) => void;
-  onCancel?: () => void;
+  onCancel?: (() => void) | undefined;
 }) {
   const [values, setValues] = useState<SkillFormValues>(initialValues);
   const [errors, setErrors] = useState<Errors>({});
@@ -236,9 +236,9 @@ function Field({
 }: {
   label: string;
   htmlFor: string;
-  error?: string;
-  hint?: string;
-  required?: boolean;
+  error?: string | undefined;
+  hint?: string | undefined;
+  required?: boolean | undefined;
   children: React.ReactNode;
 }) {
   return (

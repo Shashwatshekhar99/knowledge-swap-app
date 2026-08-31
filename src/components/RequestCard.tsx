@@ -16,8 +16,8 @@ export function RequestCard({
 }: {
   request: RequestWithDetails;
   mode: "incoming" | "sent";
-  pending?: boolean;
-  hasReviewed?: boolean;
+  pending?: boolean | undefined;
+  hasReviewed?: boolean | undefined;
   onUpdateStatus: (status: string) => void;
   onReview: () => void;
 }) {
