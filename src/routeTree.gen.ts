@@ -14,7 +14,11 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as AuthenticatedCreateSkillRouteImport } from './routes/_authenticated/create-skill'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedExploreRouteImport } from './routes/_authenticated/explore'
+import { Route as AuthenticatedEditSkillIdRouteImport } from './routes/_authenticated/edit-skill.$id'
+import { Route as AuthenticatedSkillsIdRouteImport } from './routes/_authenticated/skills.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,9 +44,31 @@ const SignupRoute = SignupRouteImport.update({
   path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedCreateSkillRoute =
+  AuthenticatedCreateSkillRouteImport.update({
+    id: '/create-skill',
+    path: '/create-skill',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedExploreRoute = AuthenticatedExploreRouteImport.update({
+  id: '/explore',
+  path: '/explore',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedEditSkillIdRoute =
+  AuthenticatedEditSkillIdRouteImport.update({
+    id: '/edit-skill/$id',
+    path: '/edit-skill/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSkillsIdRoute = AuthenticatedSkillsIdRouteImport.update({
+  id: '/skills/$id',
+  path: '/skills/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
@@ -51,14 +77,22 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/create-skill': typeof AuthenticatedCreateSkillRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/explore': typeof AuthenticatedExploreRoute
+  '/edit-skill/$id': typeof AuthenticatedEditSkillIdRoute
+  '/skills/$id': typeof AuthenticatedSkillsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/create-skill': typeof AuthenticatedCreateSkillRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/explore': typeof AuthenticatedExploreRoute
+  '/edit-skill/$id': typeof AuthenticatedEditSkillIdRoute
+  '/skills/$id': typeof AuthenticatedSkillsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -67,13 +101,35 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
+  '/_authenticated/create-skill': typeof AuthenticatedCreateSkillRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/explore': typeof AuthenticatedExploreRoute
+  '/_authenticated/edit-skill/$id': typeof AuthenticatedEditSkillIdRoute
+  '/_authenticated/skills/$id': typeof AuthenticatedSkillsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/reset-password' | '/signup' | '/dashboard'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/reset-password'
+    | '/signup'
+    | '/create-skill'
+    | '/dashboard'
+    | '/explore'
+    | '/edit-skill/$id'
+    | '/skills/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/reset-password' | '/signup' | '/dashboard'
+  to:
+    | '/'
+    | '/login'
+    | '/reset-password'
+    | '/signup'
+    | '/create-skill'
+    | '/dashboard'
+    | '/explore'
+    | '/edit-skill/$id'
+    | '/skills/$id'
   id:
     | '__root__'
     | '/'
@@ -81,7 +137,11 @@ export interface FileRouteTypes {
     | '/login'
     | '/reset-password'
     | '/signup'
+    | '/_authenticated/create-skill'
     | '/_authenticated/dashboard'
+    | '/_authenticated/explore'
+    | '/_authenticated/edit-skill/$id'
+    | '/_authenticated/skills/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -129,6 +189,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/create-skill': {
+      id: '/_authenticated/create-skill'
+      path: '/create-skill'
+      fullPath: '/create-skill'
+      preLoaderRoute: typeof AuthenticatedCreateSkillRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -136,15 +203,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/explore': {
+      id: '/_authenticated/explore'
+      path: '/explore'
+      fullPath: '/explore'
+      preLoaderRoute: typeof AuthenticatedExploreRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/edit-skill/$id': {
+      id: '/_authenticated/edit-skill/$id'
+      path: '/edit-skill/$id'
+      fullPath: '/edit-skill/$id'
+      preLoaderRoute: typeof AuthenticatedEditSkillIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/skills/$id': {
+      id: '/_authenticated/skills/$id'
+      path: '/skills/$id'
+      fullPath: '/skills/$id'
+      preLoaderRoute: typeof AuthenticatedSkillsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCreateSkillRoute: typeof AuthenticatedCreateSkillRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedExploreRoute: typeof AuthenticatedExploreRoute
+  AuthenticatedEditSkillIdRoute: typeof AuthenticatedEditSkillIdRoute
+  AuthenticatedSkillsIdRoute: typeof AuthenticatedSkillsIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCreateSkillRoute: AuthenticatedCreateSkillRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedExploreRoute: AuthenticatedExploreRoute,
+  AuthenticatedEditSkillIdRoute: AuthenticatedEditSkillIdRoute,
+  AuthenticatedSkillsIdRoute: AuthenticatedSkillsIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
