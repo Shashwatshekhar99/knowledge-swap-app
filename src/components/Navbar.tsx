@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Bell, CalendarDays, Compass, LayoutDashboard, LogOut, Menu, Plus, Sparkles, User } from "lucide-react";
+import { Bell, CalendarDays, Compass, Download, LayoutDashboard, LogOut, Menu, Plus, Sparkles, User } from "lucide-react";
 import { useState } from "react";
 
 import { Logo } from "@/components/Logo";
@@ -125,6 +125,12 @@ export function Navbar() {
                     <Plus className="size-4" aria-hidden="true" /> Share a Skill
                   </Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/download">
+                    <Download className="size-4" aria-hidden="true" /> Download app
+                  </Link>
+                </DropdownMenuItem>
+
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onSelect={handleSignOut}>
                   <LogOut className="size-4" aria-hidden="true" /> Logout

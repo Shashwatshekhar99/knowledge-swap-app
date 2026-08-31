@@ -109,6 +109,10 @@ function Landing() {
         <div className="container-page flex h-16 items-center justify-between">
           <Logo />
           <div className="flex items-center gap-2">
+            <Button asChild variant="ghost" size="sm" className="hidden rounded-xl sm:inline-flex">
+              <Link to="/download">Download app</Link>
+            </Button>
+
             {user ? (
               <Button asChild size="sm" className="rounded-xl">
                 <Link to="/dashboard">Go to dashboard</Link>
@@ -157,6 +161,17 @@ function Landing() {
                   <Link to={user ? "/create-skill" : "/signup"}>Share a Skill</Link>
                 </Button>
               </div>
+              <p className="mt-4 text-sm text-muted-foreground">
+                Or{" "}
+                <Link
+                  to="/download"
+                  className="font-semibold text-accent underline-offset-4 hover:underline"
+                >
+                  download the desktop app
+                </Link>{" "}
+                for Mac and Windows.
+              </p>
+
               <dl className="mt-10 grid max-w-md grid-cols-3 gap-6">
                 {[
                   ["13+", "skills live"],
@@ -288,10 +303,19 @@ function Landing() {
       <footer className="border-t border-border py-10">
         <div className="container-page flex flex-col items-center justify-between gap-4 sm:flex-row">
           <Logo />
-          <p className="text-sm text-muted-foreground">
-            Learn from someone who&apos;s already been there.
-          </p>
+          <div className="flex items-center gap-6">
+            <Link
+              to="/download"
+              className="text-sm font-semibold text-foreground underline-offset-4 hover:underline"
+            >
+              Download app
+            </Link>
+            <p className="text-sm text-muted-foreground">
+              Learn from someone who&apos;s already been there.
+            </p>
+          </div>
         </div>
+
       </footer>
     </div>
   );
