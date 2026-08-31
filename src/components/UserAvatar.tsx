@@ -1,3 +1,4 @@
+import { LogoMark } from "@/components/Logo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { initialsOf } from "@/lib/skillswap";
 import { cn } from "@/lib/utils";
