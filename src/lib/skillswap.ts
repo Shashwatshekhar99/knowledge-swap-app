@@ -227,3 +227,56 @@ export function summarizePeerRatings(ratings: { rating: number }[]) {
   const total = ratings.reduce((sum, row) => sum + row.rating, 0);
   return { average: total / ratings.length, count: ratings.length };
 }
+
+/* ---------------- Sessions & chat ---------------- */
+
+export type SessionMessage = Database["public"]["Tables"]["session_messages"]["Row"];
+
+export function sessionDateOf(request: SessionRequest): Date | null {
+  if (!request.preferred_date) return null;
+  const parts = request.preferred_date.split("-").map(Number);
+  if (parts.length !== 3 || parts.some((n) => Number.isNaN(n))) return null;
+  return new Date(parts[0]!, parts[1]! - 1, parts[2]!);
+}
+
+export function isSameDay(a: Date, b: Date) {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
+}
+
+export function scheduledSessions(requests: RequestWithDetails[]) {
+  return requests
+    .filter((request) => request.status === "accepted" || request.status === "completed")
+    .filter((request) => sessionDateOf(request) !== null)
+    .sort((a, b) => (sessionDateOf(a)!.getTime() - sessionDateOf(b)!.getTime()));
+}
+
+export function upcomingSessions(requests: RequestWithDetails[]) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return scheduledSessions(requests).filter(
+    (request) => request.status === "accepted" && sessionDateOf(request)!.getTime() >= today.getTime(),
+  );
+}
+
+export function formatSessionDate(date: Date) {
+  return date.toLocaleDateString(undefined, {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+}
+
+export async function fetchMessagesForRequests(requestIds: string[]): Promise<SessionMessage[]> {
+  if (!requestIds.length) return [];
+  const { data, error } = await supabase
+    .from("session_messages")
+    .select("*")
+    .in("request_id", requestIds)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+}
