@@ -32,6 +32,8 @@ export const Route = createFileRoute("/download")({
   component: DownloadPage,
 });
 
+const MAC_UNBLOCK = 'xattr -dr com.apple.quarantine /Applications/SkillSwap.app';
+
 const PLATFORMS = [
   {
     id: "mac" as const,
@@ -39,7 +41,7 @@ const PLATFORMS = [
     label: "Download for macOS",
     icon: Apple,
     size: "379 MB",
-    note: "Unzip and drag SkillSwap.app into Applications. On first launch, right-click the app and choose Open.",
+    note: "Double-click the downloaded file to unzip, drag SkillSwap into Applications, then run the one-line unblock command below before your first launch.",
   },
   {
     id: "windows" as const,
@@ -52,6 +54,23 @@ const PLATFORMS = [
 ];
 
 function DownloadPage() {
+  const [isMac, setIsMac] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    setIsMac(/mac|iphone|ipad/i.test(navigator.userAgent));
+  }, []);
+
+  const copyCommand = async () => {
+    try {
+      await navigator.clipboard.writeText(MAC_UNBLOCK);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error("Copy failed — select the command and copy it manually.");
+    }
+  };
+
   const mutation = useMutation({
     mutationFn: async (file: string) => {
       const { data, error } = await supabase.storage
@@ -61,11 +80,17 @@ function DownloadPage() {
       return data.signedUrl;
     },
     onSuccess: (url) => {
-      window.location.href = url;
-
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      toast.success("Download started — check your Downloads folder.");
     },
     onError: () => toast.error("Could not start the download. Please try again."),
   });
+
 
   return (
     <div className="min-h-screen bg-background">
