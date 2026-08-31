@@ -162,7 +162,11 @@ function DashboardPage() {
           <CalendarDays className="size-5 text-accent" aria-hidden="true" /> Session Calendar
         </h2>
         <p className="mt-1 text-sm text-muted-foreground">
-          Dates with a scheduled peer session are highlighted.
+          Dates with a scheduled peer session are highlighted.{" "}
+          <Link to="/calendar" className="font-semibold text-accent hover:underline">
+            Open the full month view
+          </Link>
+          .
         </p>
         <div className="mt-4">
           {requests.isLoading ? (
