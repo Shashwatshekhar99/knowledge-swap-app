@@ -1,11 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
-import { Apple, ArrowLeft, Download, Laptop, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Apple, ArrowLeft, Check, Copy, Download, Laptop, Loader2, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
 
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+
+
 
 
 export const Route = createFileRoute("/download")({
