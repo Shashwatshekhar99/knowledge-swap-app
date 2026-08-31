@@ -201,3 +201,29 @@ export async function fetchProfile(id: string): Promise<Profile | null> {
   if (error) throw error;
   return data;
 }
+
+/* ---------------- Peer ratings ---------------- */
+
+export type PeerRating = Database["public"]["Tables"]["peer_ratings"]["Row"];
+export type PeerRatingTarget = "profile" | "offering";
+export type PeerRatingWithRater = PeerRating & { rater: Profile | null };
+
+export async function fetchPeerRatings(
+  targetType: PeerRatingTarget,
+  targetId: string,
+): Promise<PeerRatingWithRater[]> {
+  const { data, error } = await supabase
+    .from("peer_ratings")
+    .select("*, rater:profiles!peer_ratings_rater_id_fkey(*)")
+    .eq("target_type", targetType)
+    .eq("target_id", targetId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as unknown as PeerRatingWithRater[];
+}
+
+export function summarizePeerRatings(ratings: { rating: number }[]) {
+  if (!ratings.length) return { average: 0, count: 0 };
+  const total = ratings.reduce((sum, row) => sum + row.rating, 0);
+  return { average: total / ratings.length, count: ratings.length };
+}
