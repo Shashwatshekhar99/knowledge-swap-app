@@ -1,12 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CalendarClock, CalendarDays, Clock, Inbox, MessagesSquare, Plus, Sparkles, Star, Video, MapPin, CheckCircle2 } from "lucide-react";
+import { CalendarClock, CalendarDays, CalendarRange, Clock, Inbox, MessagesSquare, Plus, Sparkles, Star, Video, MapPin, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 
+import { AvailabilityPlanner } from "@/components/AvailabilityPlanner";
 import { ChatHistory } from "@/components/ChatHistory";
 import { EmptyState } from "@/components/EmptyState";
 import { RequestSessionDialog } from "@/components/RequestSessionDialog";
 import { SessionCalendar } from "@/components/SessionCalendar";
+import { SlotBooking } from "@/components/SlotBooking";
 import { SessionChatDialog } from "@/components/SessionChatDialog";
 import { UpcomingSessions } from "@/components/UpcomingSessions";
 import { SkillCard } from "@/components/SkillCard";
@@ -172,6 +174,29 @@ function DashboardPage() {
               onOpenChat={setChatRequest}
             />
           )}
+        </div>
+      </section>
+
+      <section className="mt-12" aria-labelledby="planner-heading">
+        <h2 id="planner-heading" className="inline-flex items-center gap-2 text-xl font-bold tracking-tight">
+          <CalendarRange className="size-5 text-accent" aria-hidden="true" /> Session Planner
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Publish the times you&apos;re free each week, and book open slots from other students.
+        </p>
+        <div className="mt-4 grid gap-8 lg:grid-cols-2">
+          <div>
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Your weekly availability
+            </h3>
+            <AvailabilityPlanner userId={userId} />
+          </div>
+          <div>
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Open slots you can book
+            </h3>
+            <SlotBooking currentUserId={userId} requests={requests.data ?? []} />
+          </div>
         </div>
       </section>
 

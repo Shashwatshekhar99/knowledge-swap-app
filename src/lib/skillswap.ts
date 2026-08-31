@@ -280,3 +280,76 @@ export async function fetchMessagesForRequests(requestIds: string[]): Promise<Se
   if (error) throw error;
   return data ?? [];
 }
+
+/* ---------------- Session planner: recurring availability ---------------- */
+
+export type AvailabilitySlot = Database["public"]["Tables"]["availability_slots"]["Row"];
+export type AvailabilitySlotWithProvider = AvailabilitySlot & { provider: Profile | null };
+
+export const WEEKDAYS = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+] as const;
+
+export function weekdayLabel(weekday: number) {
+  return WEEKDAYS[weekday] ?? "Day";
+}
+
+export async function fetchMyAvailability(userId: string): Promise<AvailabilitySlot[]> {
+  const { data, error } = await supabase
+    .from("availability_slots")
+    .select("*")
+    .eq("provider_id", userId)
+    .order("weekday", { ascending: true });
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function fetchOpenAvailability(): Promise<AvailabilitySlotWithProvider[]> {
+  const { data, error } = await supabase
+    .from("availability_slots")
+    .select("*, provider:profiles!availability_slots_provider_id_fkey(*)")
+    .eq("is_open", true)
+    .order("weekday", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as unknown as AvailabilitySlotWithProvider[];
+}
+
+/** The next N calendar dates (including today) that fall on the given weekday. */
+export function nextDatesForWeekday(weekday: number, count = 4): Date[] {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const offset = (weekday - today.getDay() + 7) % 7;
+  return Array.from({ length: count }, (_, index) => {
+    const date = new Date(today);
+    date.setDate(today.getDate() + offset + index * 7);
+    return date;
+  });
+}
+
+export function toISODate(date: Date) {
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  const day = `${date.getDate()}`.padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+/** Slot times already taken by a pending/accepted request with the same provider. */
+export function isSlotTaken(
+  requests: RequestWithDetails[],
+  providerId: string,
+  isoDate: string,
+  time: string,
+) {
+  return requests.some(
+    (request) =>
+      request.provider_id === providerId &&
+      request.preferred_date === isoDate &&
+      request.preferred_time === time &&
+      (request.status === "pending" || request.status === "accepted"),
+  );
+}
