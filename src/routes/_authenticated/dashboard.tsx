@@ -175,6 +175,29 @@ function DashboardPage() {
         </div>
       </section>
 
+      <section className="mt-12" aria-labelledby="planner-heading">
+        <h2 id="planner-heading" className="inline-flex items-center gap-2 text-xl font-bold tracking-tight">
+          <CalendarRange className="size-5 text-accent" aria-hidden="true" /> Session Planner
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Publish the times you&apos;re free each week, and book open slots from other students.
+        </p>
+        <div className="mt-4 grid gap-8 lg:grid-cols-2">
+          <div>
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Your weekly availability
+            </h3>
+            <AvailabilityPlanner userId={userId} />
+          </div>
+          <div>
+            <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              Open slots you can book
+            </h3>
+            <SlotBooking currentUserId={userId} requests={requests.data ?? []} />
+          </div>
+        </div>
+      </section>
+
       <div className="mt-12 grid gap-8 lg:grid-cols-[1.35fr_1fr]">
         <section aria-labelledby="active-skills-heading">
           <div className="flex items-center justify-between">
