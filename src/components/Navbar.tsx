@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Bell, Compass, LayoutDashboard, LogOut, Menu, Plus, Sparkles, User } from "lucide-react";
+import { Bell, CalendarDays, Compass, LayoutDashboard, LogOut, Menu, Plus, Sparkles, User } from "lucide-react";
 import { useState } from "react";
 
 import { Logo } from "@/components/Logo";
@@ -23,6 +23,7 @@ import { cn } from "@/lib/utils";
 const NAV_ITEMS = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/explore", label: "Explore", icon: Compass },
+  { to: "/calendar", label: "Calendar", icon: CalendarDays },
   { to: "/my-skills", label: "My Skills", icon: Sparkles },
   { to: "/requests", label: "Requests", icon: Bell },
 ] as const;
